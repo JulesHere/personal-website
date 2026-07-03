@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="teststyle.css" rel="stylesheet"> 
+        <title>Testing html</title>
+    </head>
+    <body>
+        <button onclick="red()">R</button>
+        <button onclick="blue()">B</button>
+        <button onclick="green()">G</button>
+        <script>
+            let redcounter = 0;
+            let bluecounter = 0;
+            let greencounter = 0;
+            function red() {
+                document.body.style.background = 'red';
+                redcounter++;
+            }
+            function blue() {
+                document.body.style.background = 'blue';
+                bluecounter++;
+            }
+            function green() {
+                document.body.style.background = 'green';
+                greencounter++;
+            }
+        </script>
+    </body>
+</html>
