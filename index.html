@@ -23,19 +23,6 @@
     --ease:      cubic-bezier(.4,0,.2,1);
   }
 
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="light"]){
-      --bg:        #18210d;
-      --bg-alt:    #606c38;
-      --ink:       #fdf8ee;
-      --ink-soft:  #cbb989;
-      --line:      #4a5a2e;
-      --accent:    #b46e1f;
-      --accent-2:  #7b6034;
-      --card:      #32431f;
-      --nav-bg:    #283618;
-    }
-  }
   :root[data-theme="dark"]{
     --bg:        #18210d;
     --bg-alt:    #606c38;
@@ -385,10 +372,9 @@
   const root = document.documentElement;
   const themeToggle = document.getElementById('theme-toggle');
   const themeIcon = themeToggle.querySelector('.theme-icon');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
   function isDark(theme){
-    return theme === 'dark' || (!theme && prefersDark.matches);
+    return theme === 'dark';
   }
 
   function applyTheme(theme){
