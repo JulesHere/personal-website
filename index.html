@@ -23,6 +23,31 @@
     --ease:      cubic-bezier(.4,0,.2,1);
   }
 
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="light"]){
+      --bg:        #18210d;
+      --bg-alt:    #606c38;
+      --ink:       #fdf8ee;
+      --ink-soft:  #cbb989;
+      --line:      #4a5a2e;
+      --accent:    #b46e1f;
+      --accent-2:  #7b6034;
+      --card:      #32431f;
+      --nav-bg:    #283618;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:        #18210d;
+    --bg-alt:    #606c38;
+    --ink:       #fdf8ee;
+    --ink-soft:  #cbb989;
+    --line:      #4a5a2e;
+    --accent:    #b46e1f;
+    --accent-2:  #7b6034;
+    --card:      #32431f;
+    --nav-bg:    #283618;
+  }
+
   *,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
 
   html{ scroll-behavior:smooth; }
@@ -33,11 +58,12 @@
     color:var(--ink);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
   }
 
   a{ color:inherit; text-decoration:none; }
 
-  ::selection{ background:var(--accent); color:#fff; }
+  ::selection{ background:var(--accent); color:var(--bg); }
 
   .wrap{
     max-width:760px;
@@ -63,6 +89,7 @@
     padding-top:18px; padding-bottom:18px;
   }
   .nav-name{ font-weight:700; font-size:.95rem; letter-spacing:.02em; }
+  .nav-right{ display:flex; align-items:center; gap:24px; }
   .nav-links{ display:flex; gap:28px; font-size:.85rem; color:var(--ink-soft); }
   .nav-links a{
     position:relative; padding:2px 0;
@@ -76,6 +103,15 @@
   .nav-links a:hover{ color:var(--ink); }
   .nav-links a:hover::after{ width:100%; }
   .nav-toggle{ display:none; }
+
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    border:1px solid var(--line); background:var(--card);
+    color:var(--ink); cursor:pointer; font-size:.95rem; line-height:1;
+    transition:transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+  }
+  .theme-toggle:hover{ transform:translateY(-2px) rotate(-10deg); border-color:var(--accent); }
 
   /* ---------- hero ---------- */
   header.hero{
@@ -192,12 +228,17 @@
 <nav id="nav">
   <div class="wrap">
     <div class="nav-name">Julian Hofmann</div>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#education">Education</a>
-      <a href="#languages">Languages</a>
-      <a href="#contact">Contact</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#languages">Languages</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+      </button>
     </div>
   </div>
 </nav>
@@ -340,6 +381,32 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = themeToggle.querySelector('.theme-icon');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function isDark(theme){
+    return theme === 'dark' || (!theme && prefersDark.matches);
+  }
+
+  function applyTheme(theme){
+    if (theme === 'dark' || theme === 'light') {
+      root.setAttribute('data-theme', theme);
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    themeIcon.textContent = isDark(theme) ? '☀️' : '🌙';
+  }
+
+  applyTheme(localStorage.getItem('theme'));
+
+  themeToggle.addEventListener('click', () => {
+    const next = isDark(localStorage.getItem('theme')) ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  });
 
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
